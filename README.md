@@ -38,11 +38,6 @@ ng build --prod --environment=python
 ```
 serve files in dist/ folder using nginx or any webserver
 
-### Heroku
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-* add your dev/production configurations in config.py
-
 ### DB
 
 #### Restore

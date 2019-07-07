@@ -1,0 +1,256 @@
+.textright {
+    text-align: right;
+}
+
+.textleft {
+    text-align: left;
+}
+
+.textcenter {
+    text-align: center;
+}
+
+.fullwidth {
+    width: 100%;
+}
+mat-card{
+    margin: 10px;
+
+    height: 600px;
+}   
+
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+.chat-container {
+    overflow-y: auto;
+  }
+  
+  .chat-message {
+    margin: 10px 0;
+    min-height: 20px;
+
+    animation: fadeIn 0.5s linear;
+    animation-fill-mode: both;
+    
+    &:after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+  }
+  
+  .chat-message-content {
+    width: auto;
+    max-width: 85%;
+    display: inline-block;
+
+    padding: 7px 13px;
+    border-radius: 15px;
+    color: #595a5a;
+    background-color: #eeeeee;
+  
+    &.human {
+      float: right;
+      color: #f7f8f8;
+      background-color: #3392fb;
+    }
+  }
+  
+
+.json-response{
+    background-color:#efefef;
+    pre{
+      height: auto;
+      height: 500px;
+      overflow: auto;
+      background-color: #eeeeee;
+      word-break: normal !important;
+      word-wrap: normal !important;
+      white-space: pre !important;
+    }
+    
+}
+  
+$total-items: 5;
+ 
+ // Set delay per List Item
+@for $i from 1 through $total-items {
+    .chat-message:nth-child(#{$i}) {
+      animation-delay: .25s * $i;
+    }
+  }
+  
+  // Keyframe animation
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    75% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+
+
+
+
+
+
+
+$seat-available-bg: white;
+$seat-available-color: #a0a0a0;
+$seat-booked-bg: #a0a0a0;
+$seat-booked-color: white;
+$seat-unavailable-bg: black;
+$seat-unavailable-color: white;
+
+.badge-primary
+{
+    color: #fff;
+    background-color: $seat-available-color;
+    padding: 5px;
+    margin: 0px 5px 5px 0px;
+}
+.seatrow
+{
+    display: inline-flex;
+}
+.pricing-label
+{
+    font-weight: bold;
+    margin: 0px 0px 16px 16px;
+    padding: 0;
+    text-align: left;
+    color: #a0a0a0;
+    border-bottom: 1px solid #e2e2e2;
+}
+.seat-item
+{
+    height: 27px;
+    width: 27px;
+    line-height: 25px;
+    margin: 3px;
+    border-radius: 7px;
+    font-size: 14px;
+    padding-left: 5px;
+}
+.seat-space
+{
+    background-color: white;
+    border: 0;
+    // cursor: none;
+}
+.seat-available
+{
+    color: $seat-available-color;
+    background-color: $seat-available-bg;
+    font-weight: bolder;
+    border: 1px solid $seat-available-color;
+}
+.seat-available:hover
+{
+    color: $seat-available-color;
+    background-color: $seat-available-bg;
+    border: 1px solid $seat-available-color;
+}
+.seat-unavailable
+{
+    color: $seat-unavailable-color;
+    background-color: $seat-unavailable-bg;
+    font-weight: bolder;
+    border: 1px solid $seat-unavailable-color;
+}
+.seat-booked
+{
+    color: $seat-booked-color;
+    font-weight: bolder;
+    background-color: $seat-booked-bg;
+    border: 1px solid $seat-booked-color;
+
+}
+.seat-item:hover
+{
+    cursor: pointer;
+}
+
+.seat-container
+{
+    overflow-x: auto;
+    padding: 5% 36%;
+    overflow-y: hidden;
+}
+
+.seat-screen
+{
+    background-color: gray;
+    color: white;
+    padding: 1%;
+    text-align: center;
+    font-weight: bolder;
+}
+.bookingbar
+{
+  z-index: 1000;
+  bottom: 0;
+  position: fixed;
+  background: white;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+  display: inline-flex;
+  width: 102%;
+  
+  h5
+  {
+    font-weight: bold;
+  }
+
+  .book-area
+  {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+
+    button 
+    {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+  }
+}
+
+.total-amount
+{
+    background-color: #F17924;
+    color: white;
+    cursor: pointer;
+}
+.row-label
+{
+    color:black ; 
+    background-color:white;
+    min-width: 20px;
+    font-weight: bolder;
+    line-height: 32px;
+}
+
+.booking-summary
+{
+    display: inline-flex;
+}
+.summary-bar
+{
+    display: inline-flex;
+    margin-top: 1%;
+}
+.no-padding
+{
+    padding: 0;
+}
+
+

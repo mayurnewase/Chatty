@@ -9,21 +9,60 @@ from flask import abort
 from flask import current_app as app
 from flask import send_file
 
+from app.commons import build_response
+
+from app.seats.models import Seats
+#get full map		get
+#update full map	post
+
+seats_blueprint = Blueprint("seats_blueprint", __name__, url_prefix = "/seats")
+
+@seats_blueprint.route("/", methods = ["GET"])
+def get_map():
+	print("-----Seat get_map hit-------")
+	full_map = Seats.objects
+	print("full map is", full_map)
+	return build_response.sent_json(full_map.to_json())
 
 
+@seats_blueprint.route("/", methods = ["POST"])
+def set_map():
+	content = request.get_json(silent = True)
+	print(type(content))
+	print(content)
+	print("--Seats post hit")
+
+	seat_map_new = Seats()	
+	seat_map_new.all_seats = content
+
+	try:
+		ret_id = seat_map_new.save()	
+	except Exception as e:
+		return build_response.build_json("error ", str(e))
+	print("--Success")
+	return build_response.sent_ok()
 
 
+@seats_blueprint.route("/update", methods = ["POST"])
+def update_map():
+	content = request.get_json(silent = True)
+	print(type(content))
+	print(content)
+	print("--Seats update post hit")
 
+	#seat_map_new = Seats()	
+	#seat_map_new.all_seats = content
+	objects = Seats.objects.first()
+	seat_map_new = Seats()	
+	seat_map_new.all_seats = content
 
-
-
-
-
-
-
-
-
-
+	try:
+		ret_id = objects.delete()
+		ret_id = seat_map_new.save()
+	except Exception as e:
+		return build_response.build_json("error ", str(e))
+	print("--Success")
+	return build_response.sent_ok()
 
 
 

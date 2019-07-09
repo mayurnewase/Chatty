@@ -30,6 +30,9 @@
     <!-- seats arrangement -->
 
     <div fxFlex = "40" class="col-lg-12-seat-container">
+      <script type="text/javascript">
+          console.log("seatmap html first ", seatmap)
+      </script>
 
       <div  *ngFor="let seatrow of seatmap " >
         
@@ -47,8 +50,8 @@
                </div>
 
                 <script type="text/javascript">
-                  //console.log(seatobj.seatLabel)
-                  //console.log(seatobj.price)
+                  console.log("label is ", seatobj.seatLabel)
+                  console.log("price is ", seatobj.price)
                 </script>
 
             </div>

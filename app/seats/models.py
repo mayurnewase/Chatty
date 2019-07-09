@@ -10,7 +10,7 @@ from mongoengine.fields import StringField
 
 
 
-class seats(Document):
+class Seats(Document):
 	all_seats = ListField(required = True)
 
 

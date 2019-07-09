@@ -127,6 +127,7 @@ export class ChatComponent implements OnInit {
 
 	public processSeatChart ( map_data : any[] )
 		{
+		
 			if( map_data.length > 0 )
 			{
 				var seatNoCounter = 1;
@@ -195,13 +196,6 @@ public selectSeat( seatObject : any )
 		{
 			seatObject.status = "available";
 		}
-		console.log("seatmap after book ",this.seatmap)
-		
-		this.seatService.updateSeats(this.seatmap).then(
-			(s: any) => {
-				//this.ngOnInit();
-				console.log("Seat map inside service", this.seatmap);
-			});
 	}
 
 scrollToBottom(): void {

@@ -22,12 +22,15 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 /* Services imports begins here */
+
 import { IntentService } from '../services/intent.service';
 import {TrainingService} from '../services/training.service'
 import {IntentResolverService} from '../services/intent-resolver.service';
 import {ChatService} from '../services/chat.service'
 import {AgentsService} from '../services/agents.service'
 import {EntitiesService,EntityResolverService} from '../services/entities.service'
+import {SeatService} from '../services/seat.service'
+
 /* Services imports ends here */
 
 import { SettingsComponent } from './settings/settings.component';
@@ -63,9 +66,15 @@ import { EntityComponent } from './entity/entity.component';
     MatChipsModule,
     MatAutocompleteModule,
   ],
-  declarations: [IntentsComponent, IntentComponent, TrainComponent, SettingsComponent,
-     ChatComponent,AutofocusDirective, EntitiesComponent, EntityComponent],
-  providers:[AgentsService,IntentService,
-    IntentResolverService,TrainingService,ChatService,EntitiesService,EntityResolverService]
+
+  declarations: 
+    [IntentsComponent, IntentComponent, TrainComponent, SettingsComponent,
+        ChatComponent,AutofocusDirective, EntitiesComponent, EntityComponent
+     ],
+
+  providers:
+    [AgentsService,IntentService,IntentResolverService,TrainingService,
+    ChatService,EntitiesService,EntityResolverService,SeatService
+    ]
 })
 export class AgentModule { }

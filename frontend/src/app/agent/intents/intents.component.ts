@@ -13,8 +13,6 @@ import { UtilsService } from '../../services/utils.service';
 })
 export class IntentsComponent implements OnInit {
 
-
-
   intents: any;
 
   constructor(public intentService: IntentService, private _activatedRoute: ActivatedRoute,
@@ -25,8 +23,10 @@ export class IntentsComponent implements OnInit {
     this.intentService.getIntents().then((s: any) => {
       this.intents = s;
     });
+
   }
 
+  
 
   add() {
     this._router.navigate(["/agent/default/create-intent"])

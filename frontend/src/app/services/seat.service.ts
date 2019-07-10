@@ -7,12 +7,12 @@ export class SeatService {
 
   constructor(public http : HttpClient) { }
 
-  getSeats(){
-  	return this.http.get(environment.ikyBackend + "seats/").toPromise();
+  getSeats(id){
+  	return this.http.get(environment.ikyBackend + "seats/"+id).toPromise();
   }
 
-  saveSeats(seat_map){
-  	return this.http.post(environment.ikyBackend + "seats/save", seat_map).toPromise();
+  saveSeats(seat_map, id){
+  	return this.http.post(environment.ikyBackend + "seats/", {"id": id, "seat_map": seat_map}).toPromise();
   }
 
   updateSeats(seat_map){

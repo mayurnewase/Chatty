@@ -17,10 +17,10 @@ from app.seats.models import Seats
 
 seats_blueprint = Blueprint("seats_blueprint", __name__, url_prefix = "/seats")
 
-@seats_blueprint.route("/", methods = ["GET"])
-def get_map():
-	print("-----Seat get_map hit-------")
-	full_map = Seats.objects
+@seats_blueprint.route("/<id>", methods = ["GET"])
+def get_map(id):
+	print("-----Seat get_map hit for id " ,str(id))
+	full_map = Seats.objects(_id = str(id))
 	print("full map is", full_map)
 	return build_response.sent_json(full_map.to_json())
 
@@ -28,17 +28,18 @@ def get_map():
 @seats_blueprint.route("/", methods = ["POST"])
 def set_map():
 	content = request.get_json(silent = True)
-	print(type(content))
-	print(content)
-	print("--Seats post hit")
+	print(type(content), content.keys())
+	#print(content)
+	print("--Seats set_map post hit")
 
 	seat_map_new = Seats()	
-	seat_map_new.all_seats = content
+	seat_map_new.all_seats = content.get(u"seat_map")
+	seat_map_new._id = content.get(u"id")
 
 	try:
 		ret_id = seat_map_new.save()	
 	except Exception as e:
-		return build_response.build_json("error ", str(e))
+		return build_response.build_json("error "+ str(e))
 	print("--Success")
 	return build_response.sent_ok()
 

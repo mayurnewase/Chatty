@@ -45,6 +45,13 @@ export class ChatComponent implements OnInit {
 
 	seatConfig: any;
 	seatmap = []; 					//store all rows_config
+	seatId :any;
+
+	//Seat pre-configurations ids
+
+
+	allFullSeatConfigId = "all_full";
+	allEmptySeatConfigId = "all_empty";
 
 	private seatChartConfig = {
 		showRowsLabel : true,
@@ -91,14 +98,13 @@ export class ChatComponent implements OnInit {
 			});
 
 		//Get Seat Map
-		this.seatService.getSeats().then(
+		this.seatService.getSeats(this.allFullSeatConfigId).then(
 			(s: any) => {
 				this.seatmap = s[0].all_seats;
+				this.seatId = s[0]._id;
 				//this.seatmap = [];
-				console.log("Seat map inside service", this.seatmap);
+				console.log("Seat map inside service", s[0]);
 			});
-		
-		console.log("seatmap outside", this.seatmap);
 
 		this.seatConfig = [
 		{
@@ -106,18 +112,13 @@ export class ChatComponent implements OnInit {
 			"seat_map": [
 				{
 					"row_label": "A",
-					"layout": "ggggggggggg",
-					"status" : "aaaaaaaaaa"
+					"layout": "gggg",
+					"status" : "aaaa"
 				},
 				{
 					"row_label": "B",
-					"layout": "ggggggggggg",
-					"status" : "aaaaaaaaaa"
-				},
-				{
-					"row_label": "C",
-					"layout": "ggggggggggg",
-					"status" : "aaaaaaaaaa"
+					"layout": "gggg",
+					"status" : "aaaa"
 				}
 			]
 		}]
@@ -180,7 +181,8 @@ export class ChatComponent implements OnInit {
 			}//close if_check
 
 		//save seatmap in mongo
-		//this.seatService.saveSeats(this.seatmap)
+		//console.log("Saving seats in db with all_full")
+		//this.seatService.saveSeats(this.seatmap, "all_full")
 
 		}//close process_seat_chart
 
@@ -200,9 +202,20 @@ public selectSeat( seatObject : any )
 		this.seatService.updateSeats(this.seatmap).then(
 			(s: any) => {
 				//this.ngOnInit();
-				console.log("Seat map inside service", this.seatmap);
 			});
 	}
+
+//Various seat configs
+
+public seatConfigAllFull(){
+	this.seatService.getSeats(this.allFullSeatConfigId).then(
+		(s: any) => {
+			this.seatmap = s[0].all_seats;
+			this.seatId = s[0]._id;
+			//this.seatmap = [];
+			console.log("Seat map in seatConfigAllFull", s[0]);
+		});
+}
 
 scrollToBottom(): void {
 		try {
@@ -219,7 +232,6 @@ scrollToBottom(): void {
 					this.add_to_messages(item,"chat")
 				},500)
 			}
-
 	});
 	}
 	add_to_messages(message,author){
@@ -259,9 +271,7 @@ scrollToBottom(): void {
 				)
 				
 			});
-
 	}
-
 }
 
 export class Message {

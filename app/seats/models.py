@@ -11,6 +11,7 @@ from mongoengine.fields import StringField
 
 
 class Seats(Document):
+	_id = StringField(required = True)
 	all_seats = ListField(required = True)
 
 

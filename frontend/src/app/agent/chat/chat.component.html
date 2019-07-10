@@ -29,7 +29,7 @@
 
     <!-- seats arrangement -->
 
-    <div fxFlex = "40" class="col-lg-12-seat-container">
+    <div fxLayoutGap = "5px" fxLayout="column" class="col-lg-12-seat-container">
       <script type="text/javascript">
           console.log("seatmap html first ", seatmap)
       </script>
@@ -48,17 +48,25 @@
                     (click)="selectSeat(seatobj)" *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">
                     {{seatobj.seatNo}}
                </div>
-
+               <!--
                 <script type="text/javascript">
                   console.log("label is ", seatobj.seatLabel)
                   console.log("price is ", seatobj.price)
                 </script>
-
+                -->
             </div>
         </div>
       </div>
 
+      <hr>
+    <button mat-raised-button fxLayout="column" color="primary"  (click)="seatConfigAllFull()">
+      Full Seats
+    </button>
     </div>
+
+    
+
+
         
     <mat-card fxFlex="30" class="json-response">
       <h3>POST /api/v1</h3>

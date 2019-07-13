@@ -49,6 +49,9 @@ You can import some default intents using follwing steps
 - click import
 
 ### Screenshots
+![](https://i.ibb.co/W2jVLkB/Screenshot-from-2019-07-13-15-10-41.png)
+![](https://i.ibb.co/K2MXvtb/Screenshot-from-2019-07-13-15-10-32.png)
+![](https://i.ibb.co/K2MXvtb/Screenshot-from-2019-07-13-15-10-32.png)
 
 ### Todos
  *  Wire seats ui with mongo

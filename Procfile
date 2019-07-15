@@ -1,1 +1,1 @@
-web: APPLICATION_ENV="Production" gunicorn -k gevent run:app
+web: bin/start-nginx python2 run.py

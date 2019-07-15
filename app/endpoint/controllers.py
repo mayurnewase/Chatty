@@ -104,8 +104,10 @@ def api():
         #First request after init response is always complete -> then it is inspected and decided if complete or not
         #print("---inital request json \n", request_json)
 
-        if ((request_json.get("complete") is None) or (
-                request_json.get("complete") is True)):
+        if ((request_json.get("complete") is None) or (request_json.get("complete") is True)):
+
+            print("----FIRST PATH FOR REQUEST_JSON -> None || True")
+
             result_json["intent"] = {
                 "object_id": str(intent.id),
                 "confidence": confidence,
@@ -163,12 +165,19 @@ def api():
                     context["parameters"] = extracted_parameters
                     print("---result json in no missing parameter", result_json)
 
+                    #GOT ALL PARAMS -> CAN WORK ON LOGIC HERE
+                    #FIND RESULT AND PUT IN SPEECH RESPONSE
+
             else:
                 result_json["complete"] = True
+
+                #NO PARAMS REQUIRED -> CAN WORK ON INTENTS HERE WHICH DO NOT NEED ANY PARAMS
+                #FIND RESULT AND PUT IN SPEECH RESPONSE
 
         elif request_json.get("complete") is False:
             #if some params are required further
             #and it is not cancel intent
+            print("----SECOND PATH FOR REQUEST_JSON -> False")
 
             if "cancel" not in intent.name:
 
@@ -206,6 +215,8 @@ def api():
                 result_json["complete"] = True
 
         if result_json["complete"]:
+            print("----THIRD PATH FOR REQUEST_JSON -> True")
+
             if intent.apiTrigger:
                 isJson = False
                 parameters = result_json["extractedParameters"]

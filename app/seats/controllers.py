@@ -53,17 +53,19 @@ def update_map():
 
 	#seat_map_new = Seats()	
 	#seat_map_new.all_seats = content
-	objects = Seats.objects.first()
 	seat_map_new = Seats()	
+	
 	seat_map_new.all_seats = content
+	seat_map_new._id = str(ObjectId())
 
 	try:
-		ret_id = objects.delete()
+		#ret_id = objects.delete()
 		ret_id = seat_map_new.save()
 	except Exception as e:
-		return build_response.build_json("error ", str(e))
-	print("--Success")
-	return build_response.sent_ok()
+		return build_response.build_json("error " + str(e))
+	print("--Success", seat_map_new._id)
+
+	return build_response.sent_json((seat_map_new._id))
 
 
 

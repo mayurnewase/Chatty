@@ -80,7 +80,8 @@ export class ChatComponent implements OnInit {
 	ngOnInit() {
 		this.chatInitial = {
 			'currentNode': '',
-			'complete': null, 'context': {},
+			'complete': null,
+			'context': {},
 			'parameters': [],
 			'extractedParameters': {},
 			'speechResponse': '',
@@ -93,7 +94,6 @@ export class ChatComponent implements OnInit {
 			.then((c: any) => {
 				c.owner = 'chat';
 				this.changeCurrent(c);
-
 				this.render_bubbles(c)
 			});
 
@@ -199,10 +199,12 @@ public selectSeat( seatObject : any )
 		}
 		console.log("seatmap after book ",this.seatmap)
 		
-		this.seatService.updateSeats(this.seatmap).then(
-			(s: any) => {
-				//this.ngOnInit();
-			});
+		//this.seatService.updateSeats(this.seatmap).then(
+		//	(s: any) => {
+		//		//this.ngOnInit();
+				//Do not modify database for custom config
+		//		console.log("Return from update service is ", s);
+		//	});
 	}
 
 //Various seat configs

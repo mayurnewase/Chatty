@@ -1,1 +1,1 @@
-web: bin/start-nginx python2 run.py
+web: bin/start-nginx gunicorn --bind=unix:///tmp/nginx.socket run.py

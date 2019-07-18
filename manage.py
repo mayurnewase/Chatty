@@ -19,7 +19,7 @@ def install_nltk_dependencies():
 
 @manager.command
 def init():
-	retval = subprocess.call(["python", "-m", "spacy download en_core_web_sm"])
+	retval = subprocess.call(["python", "-m", "spacy download en"])
 	#python -m spacy download en_core_web_sm
 	sys.exit(retval)
 	

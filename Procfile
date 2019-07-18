@@ -1,1 +1,1 @@
-web: bin/start-nginx python manage.py init && gunicorn -c conf/gunicorn.conf.py wsgi:app
+web: python manage.py init && bin/start-nginx gunicorn -c conf/gunicorn.conf.py wsgi:app

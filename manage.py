@@ -1,4 +1,5 @@
 from flask_script import Manager
+import subprocess, sys
 
 from app import app
 
@@ -18,6 +19,10 @@ def install_nltk_dependencies():
 
 @manager.command
 def init():
+    retval = subprocess.call(["python", "-m", "spacy download en_core_web_sm])
+    #python -m spacy download en_core_web_sm
+	sys.exit(retval)
+    
     from app.agents.models import Bot
     print("---inside init of manager---")
     try:

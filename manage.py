@@ -2,7 +2,7 @@ from flask_script import Manager
 import subprocess, sys
 
 
-retval = subprocess.call(["python2", "-m", "spacy download en"])
+retval = subprocess.call(["python", "-m", "spacy download en"])
 #python -m spacy download en_core_web_sm
 sys.exit(retval)
 

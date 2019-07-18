@@ -110,7 +110,7 @@ class EmbeddingIntentClassifier:
         self.intent_placeholder = intent_placeholder
         self.embedding_placeholder = embedding_placeholder
         self.similarity_op = similarity_op
-        self.nlp = spacy.load('en')
+        self.nlp = spacy.load('en_core_web_sm')
         self.vect = vectorizer
         self.use_word_vectors = use_word_vectors
 

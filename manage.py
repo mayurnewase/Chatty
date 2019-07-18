@@ -1,6 +1,11 @@
 from flask_script import Manager
 import subprocess, sys
 
+
+retval = subprocess.call(["python", "-m", "spacy download en"])
+#python -m spacy download en_core_web_sm
+sys.exit(retval)
+
 from app import app
 
 manager = Manager(app)
@@ -19,9 +24,7 @@ def install_nltk_dependencies():
 
 @manager.command
 def init():
-	retval = subprocess.call(["python", "-m", "spacy download en"])
-	#python -m spacy download en_core_web_sm
-	sys.exit(retval)
+
 	
 	from app.agents.models import Bot
 	print("---inside init of manager---")

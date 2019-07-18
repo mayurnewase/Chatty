@@ -20,11 +20,7 @@ class Development(Config):
 
 class Production(Config):
     # MongoDB Database Details
-    MONGODB_DB = "iky-ai"
-    MONGODB_HOST = "mongodb"
-    MONGODB_PORT = 27017
-    MONGODB_USERNAME = ""
-    MONGODB_USERNAME = ""
+    MONGODB_DB = os.environ.get("MONGODB_URI")
 
     # Web Server details
     WEB_SERVER_PORT = 8001

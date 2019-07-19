@@ -8,31 +8,48 @@ events {
   worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
 }
 
-http {
-  gzip on;
-  gzip_comp_level 2;
-  gzip_min_length 512;
+server {
+	listen <%= ENV["PORT"] %>;
+	server_name flack.dingadunga.com;
 
-  server_tokens off;
-
-  log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
-  access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || 'logs/nginx/access.log' %> l2met;
-  error_log <%= ENV['NGINX_ERROR_LOG_PATH'] || 'logs/nginx/error.log' %>;
-
-
-  include mime.types;
-  default_type application/octet-stream;
-  sendfile on;
-
-  # Must read the body in 5 seconds.
-  client_body_timeout <%= ENV['NGINX_CLIENT_BODY_TIMEOUT'] || 5 %>;
-
-  server {
-    listen <%= ENV["PORT"] %>;
-    server_name _;
-    keepalive_timeout 5;
-    client_max_body_size <%= ENV['NGINX_CLIENT_MAX_BODY_SIZE'] || 1 %>M;
-
-    root dist; # path to your app
-  }
+	return 301 https://$host$request_uri;
 }
+
+upstream chatty_backend{
+  server server  unix:/tmp/nginx.socket fail_timeout=0;
+}
+
+server {
+		listen 443 ssl;
+		flack.dingadunga.com
+		root usr/share/nginx/html;
+		index index.html index.html;
+
+    ssl_certificate /etc/letsencrypt/live/flack.miguelgrinberg.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/flack.miguelgrinberg.com/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
+    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:[7/86]ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    add_header Strict-Transport-Security max-age=15768000;
+	
+		
+	location /{
+		
+		proxy_pass http://chatty_backend;
+		proxy_redirect off;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+
+	location ~/.well-known {
+		allow all;
+	}
+
+}
+

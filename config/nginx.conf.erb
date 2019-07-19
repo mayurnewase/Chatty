@@ -8,10 +8,6 @@ events {
   worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
 }
 
-upstream nodes {
-	server server unix:/tmp/nginx.socket fail_timeout=0;
-}
-
 http {
   gzip on;
   gzip_comp_level 2;
@@ -38,17 +34,5 @@ http {
     client_max_body_size <%= ENV['NGINX_CLIENT_MAX_BODY_SIZE'] || 1 %>M;
 
     root dist; # path to your app
-    index index.html index.html;
-    
-    location / {
-      proxy_pass http://nodes;
-      proxy_redirect off;
-      proxy_set_header Host $host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	}
-
-  }
-  
   }
 }

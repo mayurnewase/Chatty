@@ -1,11 +1,12 @@
 worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
 
 
-#upstream nodes {
-#	server server unix:/tmp/nginx.socket fail_timeout=0;
-#}
+
 
 http {
+	upstream nodes {
+		server server unix:/tmp/nginx.socket fail_timeout=0;
+	}
   gzip on;
   gzip_comp_level 2;
   gzip_min_length 512;
@@ -36,7 +37,7 @@ http {
     	try_files $uri $uri/ /index.html =404;
   	}
   	location /gateway {
-    	proxy_pass unix:/tmp/nginx.socket;
+    	proxy_pass nodes;
     	proxy_set_header Host $host;
    	}
   }

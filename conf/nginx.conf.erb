@@ -36,5 +36,8 @@ http {
     location / {
       root dist; # path to your app
     } 
+    location /error {
+      return 404;
+    }
   }
 }

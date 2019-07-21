@@ -36,9 +36,9 @@ http {
 	location / {
     	try_files $uri $uri/ /index.html =404;
   	}
-  	#location /gateway {
-    	#	proxy_pass http://nodes;
-    	#	proxy_set_header Host $host;
-   	#}
+  	location /gateway {
+    		proxy_pass http://unix:/tmp/nginx.socket;
+    		proxy_set_header Host $host;
+   	}
   }
 }

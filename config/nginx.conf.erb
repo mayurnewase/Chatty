@@ -21,7 +21,7 @@ http{
     gzip_types        text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
     gzip_comp_level   9;
 
-    root /var/www/dist;
+    root dist;
 
     location /gateway/ {
     proxy_pass http://localhost:8080;

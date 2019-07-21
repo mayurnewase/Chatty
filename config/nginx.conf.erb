@@ -1,5 +1,7 @@
 worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
-events{}
+events{
+  worker_connections 2048;
+}
 
 http{
   server {

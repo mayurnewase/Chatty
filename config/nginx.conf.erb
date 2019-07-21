@@ -4,6 +4,18 @@ events{
 }
 
 http{
+
+  include mime.types;
+  default_type application/octet-stream;
+  sendfile on;
+
+  # Must read the body in 5 seconds.
+  client_body_timeout 5;
+
+  upstream app_server {
+    server unix:/tmp/nginx.socket fail_timeout=0;
+  }
+
   server {
 
     listen <%= ENV["PORT"] %>;
@@ -24,7 +36,8 @@ http{
     root dist;
 
     location /gateway/ {
-    proxy_pass http://localhost:8080/;
+    #proxy_pass http://localhost:8080/;
+    proxy_pass app_server;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_read_timeout 300;

@@ -1,5 +1,5 @@
 # Chatty
-### An AI Chatbot framework built in Python
+### An AI Chatbot built in Python
 
 * Work is in progress
 

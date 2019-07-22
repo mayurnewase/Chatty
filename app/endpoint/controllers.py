@@ -54,7 +54,7 @@ def api():
 
     request_json = request.get_json(silent=True)
     result_json = request_json
-
+    print("-------------chat input is ", request_json.get("input"))
     if request_json:
 
         #dont know what is context yet

@@ -11,7 +11,7 @@ from app.commons import build_response
 from app.endpoint.utils import SilentUndefined
 from app.endpoint.utils import call_api
 from app.endpoint.utils import get_synonyms
-from app.endpoint.utils import split_sentence
+from app.endpoint.utils import split_sentence, treat_intent
 from app.intents.models import Intent
 from app.nlu.classifiers.starspace_intent_classifier import \
     EmbeddingIntentClassifier
@@ -23,7 +23,6 @@ endpoint = Blueprint('api', __name__, url_prefix='/api')
 sentence_classifier = None
 synonyms = None
 entity_extraction = None
-
 
 # Request Handler
 @endpoint.route('/v1', methods=['POST'])
@@ -43,7 +42,8 @@ def api():
       "intent": {},
       "context": {},
       "input": "hello",
-      "speechResponse": []
+      "speechResponse": [],
+      "seat_map" : []
     }
 
     :param json:
@@ -55,6 +55,9 @@ def api():
     request_json = request.get_json(silent=True)
     result_json = request_json
     print("-------------chat input is ", request_json.get("input"))
+    seat_map = request_json.get("seat_map")
+    print("----seat map in backend is ", seat_map)
+
     if request_json:
 
         #dont know what is context yet
@@ -78,12 +81,15 @@ def api():
             app.logger.info(request_json.get("input"), extra=result_json)
             return build_response.build_json(result_json)
 
-        #predict intent id from intent model
+            #predict intent id from intent model
             #get intentid
             #confidence for that intet
             #other intent with low confidence
 
         intent_id, confidence, suggestions = predict(request_json.get("input"))
+        
+        print("-----keys in request_json", request_json.keys())
+        
         app.logger.info("intent_id => %s" % intent_id)
 
         #get predicted intent object from mongo,which contains
@@ -167,12 +173,19 @@ def api():
 
                     #GOT ALL PARAMS -> CAN WORK ON LOGIC HERE
                     #FIND RESULT AND PUT IN SPEECH RESPONSE
+                    #result can be only positive or negative
+                    #agent should show it according to intent
+                    result = treat_intent(intent_id, parameters, seat_map)
+                    result_json["seat_map"] = result
 
             else:
                 result_json["complete"] = True
 
                 #NO PARAMS REQUIRED -> CAN WORK ON INTENTS HERE WHICH DO NOT NEED ANY PARAMS
                 #FIND RESULT AND PUT IN SPEECH RESPONSE
+                result = treat_intent(intent_id, parameters, seat_map)
+                result_json["seat_map"] = result
+
 
         elif request_json.get("complete") is False:
             #if some params are required further
@@ -250,12 +263,13 @@ def api():
                                     undefined=SilentUndefined)
                 result_json["speechResponse"] = split_sentence(template.render(**context))
 
+            result = treat_intent(intent_id, parameters, seat_map)
+            result_json["seat_map"] = result
 
         app.logger.info(request_json.get("input"), extra=result_json)
         return build_response.build_json(result_json)
     else:
         return abort(400)
-
 
 def update_model(app, message, **extra):
     """

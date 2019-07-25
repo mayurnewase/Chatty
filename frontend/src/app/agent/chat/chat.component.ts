@@ -78,24 +78,6 @@ export class ChatComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.chatInitial = {
-			'currentNode': '',
-			'complete': null,
-			'context': {},
-			'parameters': [],
-			'extractedParameters': {},
-			'speechResponse': '',
-			'intent': {},
-			'input': 'init_conversation',
-			'missingParameters': []
-		};
-
-		this.chatService.converse(this.chatInitial)
-			.then((c: any) => {
-				c.owner = 'chat';
-				this.changeCurrent(c);
-				this.render_bubbles(c)
-			});
 
 		//Get Seat Map
 		this.seatService.getSeats(this.allFullSeatConfigId).then(
@@ -104,87 +86,32 @@ export class ChatComponent implements OnInit {
 				this.seatId = s[0]._id;
 				//this.seatmap = [];
 				console.log("Seat map inside service", s[0]);
-			});
+			
 
-		this.seatConfig = [
-		{
-			"seat_price": 250,
-			"seat_map": [
-				{
-					"row_label": "A",
-					"layout": "gggg",
-					"status" : "aaaa"
-				},
-				{
-					"row_label": "B",
-					"layout": "gggg",
-					"status" : "aaaa"
-				}
-			]
-		}]
+			this.chatInitial = {
+				'currentNode': '',
+				'complete': null,
+				'context': {},
+				'parameters': [],
+				'extractedParameters': {},
+				'speechResponse': '',
+				'intent': {},
+				'input': 'init_conversation',
+				'missingParameters': [],
+				'seat_map' : this.seatmap
+			};
 
-		//this.processSeatChart(this.seatConfig);
+			console.log("sending initial chat ", this.chatInitial);
+			this.chatService.converse(this.chatInitial)
+				.then((c: any) => {
+					c.owner = 'chat';
+					this.changeCurrent(c);
+					this.render_bubbles(c)
+				});
+
+			//this.processSeatChart(this.seatConfig);
+		});//getSeats closed
 	} //on_init closed
-
-	public processSeatChart ( map_data : any[] )
-		{
-			if( map_data.length > 0 )
-			{
-				var seatNoCounter = 1;
-				for (let row_group_counter = 0; row_group_counter < map_data.length; row_group_counter++) {
-					//iterating rows_group has same price
-
-					var item_map = map_data[row_group_counter].seat_map; //has seat_maps of 1 row_group
-					
-					item_map.forEach(map_element => {							//iterate rows -> row_label, layout of each row
-
-							var mapObj = {		//store seat_config for 1 row
-								"seatRowLabel" : map_element.row_label,
-								"seats" : [],
-							};
-
-							var seatValArr = map_element.layout.split('');     //1 row config "ggg_ggg"
-
-							if( this.seatChartConfig.newSeatNoForRow )
-							{
-								seatNoCounter = 1; //Reset the seat label counter for new row
-							}
-							var totalItemCounter = 1;
-							
-							seatValArr.forEach(item => {  							//iterate on "g,g,g,_,g,g,g"
-									var seatObj = {
-										"key" : map_element.row_label+"_"+totalItemCounter,
-										"status" : "available",
-										"seatLabel" : "None",
-										"seatNo" : "None"
-									};
-								 
-									if( item != '_')
-									{
-										seatObj["seatLabel"] = map_element.row_label+" "+seatNoCounter;
-										seatObj["seatNo"] = ""+seatNoCounter;
-										
-										seatNoCounter++;
-									}
-									else
-									{
-										seatObj["seatLabel"] = "None";
-									}
-									totalItemCounter++;
-									mapObj["seats"].push(seatObj);
-							});
-
-							console.log(" \n\n\n Seat Objects " , mapObj);
-							this.seatmap.push( mapObj );							//store 1 rows_group in global map
-					});
-				}//close row group iterator
-			}//close if_check
-
-		//save seatmap in mongo
-		//console.log("Saving seats in db with all_full")
-		//this.seatService.saveSeats(this.seatmap, "all_full")
-
-		}//close process_seat_chart
 
 public selectSeat( seatObject : any )
 	{
@@ -236,7 +163,7 @@ scrollToBottom(): void {
 			}
 	});
 	}
-	add_to_messages(message,author){
+	add_to_messages(message, author){
 			let new_message = new Message(message,author)
 			this.messages.push(new_message);
 			setTimeout(()=>{
@@ -256,16 +183,23 @@ scrollToBottom(): void {
 		const sendMessage = {
 			... this.chatCurrent,
 			input: form.input,
-			owner: 'user'
+			owner: 'user',
+			seat_map : this.seatmap
 		};
 		this.add_to_messages(form.input,"user")
 
 		this.changeCurrent(sendMessage);
 		this.chatService.converse(sendMessage)
 			.then((c: any) => {
+				console.log("second chat message to send", sendMessage);
+				console.log("agent gave ", c)
+
 				c.owner = 'chat';
 				this.changeCurrent(c);
 				this.chatForm.reset();
+				//need to get agent response and update ui to booked seat
+				this.seatmap = c.seat_map;
+
 				setTimeout(
 					()=>{
 						this.render_bubbles(c);

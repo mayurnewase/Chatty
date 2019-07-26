@@ -200,7 +200,7 @@ def api():
                 #print("---request json in complete false is ", intent_id, request_json)
                 print("----SECOND TIME ENTITY EXTRACTION WITH REPLACING SYNONYMS FOR ",
                     request_json.get("currentNode"),request_json.get("input"))
-                
+
                 extracted_parameter = entity_extraction.replace_synonyms({
                     request_json.get("currentNode"): request_json.get("input")
                 })
@@ -230,7 +230,7 @@ def api():
                 result_json["complete"] = True
 
         if result_json["complete"]:
-            print("----THIRD PATH FOR REQUEST_JSON -> True")
+            print("----THIRD PATH FOR RESULT_JSON -> True")
 
             if intent.apiTrigger:
                 isJson = False
@@ -265,7 +265,7 @@ def api():
                                     undefined=SilentUndefined)
                 result_json["speechResponse"] = split_sentence(template.render(**context))
 
-            result = treat_intent(intent_id, parameters, seat_map)
+            result = treat_intent(intent_id, result_json["parameters"], seat_map)
             result_json["seat_map"] = result
 
         app.logger.info(request_json.get("input"), extra=result_json)

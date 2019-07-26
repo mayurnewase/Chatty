@@ -21,9 +21,9 @@ class EntityExtractor:
         :return:
         """
         for entity in entities.keys():
-
             entity_value = str(entities[entity])
 
+            print("Replacing synonym for entity and it value", entity, entity_value)
             if entity_value.lower() in self.synonyms:
                 entities[entity] = self.synonyms[entity_value.lower()]
 

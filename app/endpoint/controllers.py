@@ -55,7 +55,7 @@ def api():
     request_json = request.get_json(silent=True)
     result_json = request_json
     print("-------------chat input is ", request_json.get("input"))
-    seat_map = request_json.get("seat_map")
+    seat_map = request_json.get("seat_map")             #PROBLEM -> seat_map is null,but keys in request json has seat_map sometimes
     print("----seat map in backend is ", seat_map)
 
     if request_json:
@@ -106,9 +106,12 @@ def api():
         else:
             parameters = []
 
-        #for first request -> doesnt have complete param -> so None
+        #for first request -> doesnt have param -> so None
         #First request after init response is always complete -> then it is inspected and decided if complete or not
-        #print("---inital request json \n", request_json)
+        #So path is always:
+            #first -> third (if no param required)
+            #first -> second ->third   (if 1 param required)
+            #first -> second -> second ->third   (if 2 params required)
 
         if ((request_json.get("complete") is None) or (request_json.get("complete") is True)):
 
@@ -122,7 +125,6 @@ def api():
 
             #if intent require parameters then extract them from input with entity extractor model -> crfsuit
             #else result_json is complete
-
             if parameters:
 
                 # Extract NER entities
@@ -158,7 +160,6 @@ def api():
                     #mark result_json as not complete
                     #set current node to first missing parameter
                     #put that paramter asking response in result_json
-
                 if missing_parameters:
                     result_json["complete"] = False
                     current_node = missing_parameters[0]
@@ -175,17 +176,16 @@ def api():
                     #FIND RESULT AND PUT IN SPEECH RESPONSE
                     #result can be only positive or negative
                     #agent should show it according to intent
-                    result = treat_intent(intent_id, parameters, seat_map)
-                    result_json["seat_map"] = result
+                    #result = treat_intent(intent_id, parameters, seat_map)
+                    #result_json["seat_map"] = result
 
             else:
                 result_json["complete"] = True
 
                 #NO PARAMS REQUIRED -> CAN WORK ON INTENTS HERE WHICH DO NOT NEED ANY PARAMS
                 #FIND RESULT AND PUT IN SPEECH RESPONSE
-                result = treat_intent(intent_id, parameters, seat_map)
-                result_json["seat_map"] = result
-
+                #result = treat_intent(intent_id, parameters, seat_map)
+                #result_json["seat_map"] = result
 
         elif request_json.get("complete") is False:
             #if some params are required further
@@ -198,7 +198,9 @@ def api():
                 intent = Intent.objects.get(intentId=intent_id)
 
                 #print("---request json in complete false is ", intent_id, request_json)
-
+                print("----SECOND TIME ENTITY EXTRACTION WITH REPLACING SYNONYMS FOR ",
+                    request_json.get("currentNode"),request_json.get("input"))
+                
                 extracted_parameter = entity_extraction.replace_synonyms({
                     request_json.get("currentNode"): request_json.get("input")
                 })

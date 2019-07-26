@@ -265,14 +265,14 @@ def api():
                                     undefined=SilentUndefined)
                 result_json["speechResponse"] = split_sentence(template.render(**context))
 
-            result = treat_intent(intent_id, result_json["parameters"], seat_map)
+            result = treat_intent(intent_id, result_json["extractedParameters"], seat_map)
             result_json["seat_map"] = result
 
         app.logger.info(request_json.get("input"), extra=result_json)
         return build_response.build_json(result_json)
     else:
         return abort(400)
-
+        
 def update_model(app, message, **extra):
     """
     Signal hook to be called after training is completed.

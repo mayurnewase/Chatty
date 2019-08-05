@@ -70,8 +70,9 @@ def book_seats(params, seat_map):
 		#check status
 		#return result
 	print("--params is ",params)
-	seat_row = params[0][0]
-	seat_no = params[1][1:]
+	seat_row = params["seat_no"][0]
+	seat_no = int(params["seat_no"][1:])
+	
 	#seat_map is faulty -> so usig loop to find row
 	for row_index, dict_ in enumerate(seat_map):
 		if dict_["seatRowLabel"] == seat_row:

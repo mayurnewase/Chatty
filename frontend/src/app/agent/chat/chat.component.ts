@@ -30,7 +30,7 @@ import { trigger,style,transition,animate,keyframes,query,stagger } from '@angul
 //Seat Configs
 //seatmap -> contain many mapObj(1 row config -> [row_label, all_seats])
 //mapObj -> contain many seatObj(all seats config [key,status,seatNumber])
- 
+
 export class ChatComponent implements OnInit {
 	chatInitial;
 	chatCurrent;
@@ -48,7 +48,6 @@ export class ChatComponent implements OnInit {
 	seatId :any;
 
 	//Seat pre-configurations ids
-
 
 	allFullSeatConfigId = "all_full";
 	allEmptySeatConfigId = "all_empty";
@@ -87,7 +86,6 @@ export class ChatComponent implements OnInit {
 				//this.seatmap = [];
 				console.log("Seat map inside service", s[0]);
 			
-
 			this.chatInitial = {
 				'currentNode': '',
 				'complete': null,

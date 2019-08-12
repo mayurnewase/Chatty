@@ -14,11 +14,14 @@ def treat_intent(intent, params, seat_map):
 	"""
 	just read intent and call that function
 	"""
-
 	print("----TREATING INTENT WITH PARAMS", intent, params, seat_map)
 	if intent == "book_seats":
-		seat_map = book_seats(params, seat_map)
-	return seat_map
+		seat_map, response = book_seats(params, seat_map)
+
+	if intent == "search_free_seats":
+		seat_map, response = find_free_seats(params, seat_map)
+
+	return seat_map, response
 
 def book_seats(params, seat_map):
 	"""
@@ -69,23 +72,78 @@ def book_seats(params, seat_map):
 	#book single seat
 		#check status
 		#return result
-	print("--params is ",params)
+	#print("--params is ",params)
 	seat_row = params["seat_no"][0]
 	seat_no = int(params["seat_no"][1:])
-	
+	#print("seat row and no", seat_row, seat_no)
+	status = None
+	found = False
+	seat_row_to_change = None
+	seat_index_to_change = None
+
+
 	#seat_map is faulty -> so usig loop to find row
 	for row_index, dict_ in enumerate(seat_map):
 		if dict_["seatRowLabel"] == seat_row:
 			all_seats = dict_["seats"]
 			for seat_index, seat in enumerate(all_seats):
-				if seat["seat_no"] == seat_no:
+
+				if int(seat["seatNo"]) == seat_no:
+					#print("=================found seat here ", seat_no, seat["seatNo"])
 					status = seat["status"]
+					#print("==================status is ", status)
+					#print("============== row and seat index", row_index, seat_index)
+					found = True
+					seat_row_to_change = row_index
+					seat_index_to_change = seat_index
 					break
 
-	if status == "available":
-		seat_map[row_index]["seats"][seat_index][status] = "booked"
+	if found:
+		#print("=================changing seat status===================")
+		#print("=======row and seat index", row_index, seat_index)
+		if (seat_map[seat_row_to_change]["seats"][seat_index_to_change]["status"] == "available"):
+			seat_map[seat_row_to_change]["seats"][seat_index_to_change]["status"] = "booked"
+			response = "booked successfully"
+		else:
+			response = "seat already booked"
 
-	return seat_map
+	return seat_map, response
+
+def find_free_seats(params, seat_map):
+	"""
+	param should have row number and how many seats
+	so we will find it in that row
+
+	return seat_map, response
+	"""
+	print("======inside find free seats====")	
+	print("params are ", params)
+	row = params["row"]
+	total_seats_to_book = int(params["total_seats_to_book"])
+	free_seat_found = []
+	
+	for row_index, dict_ in enumerate(seat_map):
+		if dict_["seatRowLabel"] == row:
+			print("found row to be checked")
+			free_found = 0
+
+			for seat_index, seat in enumerate(all_seats):
+				if seat["status"] == "available":
+					free_found += 1
+					free_seat_found.append(seat_index)
+
+					if free_found == total_seats_to_book:
+						break
+			
+	if free_found == total_seats_to_book:
+		for seat in free_seat_found:
+			seat_map[row]["seats"][seat]["status"] == "booked"
+		response = "booked successfully"
+	else:
+		response = "not enough free seats"
+
+	return seat_map, response
+
 
 
 def split_sentence(sentence):

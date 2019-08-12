@@ -172,20 +172,8 @@ def api():
                     context["parameters"] = extracted_parameters
                     print("---result json in no missing parameter", result_json)
 
-                    #GOT ALL PARAMS -> CAN WORK ON LOGIC HERE
-                    #FIND RESULT AND PUT IN SPEECH RESPONSE
-                    #result can be only positive or negative
-                    #agent should show it according to intent
-                    #result = treat_intent(intent_id, parameters, seat_map)
-                    #result_json["seat_map"] = result
-
             else:
                 result_json["complete"] = True
-
-                #NO PARAMS REQUIRED -> CAN WORK ON INTENTS HERE WHICH DO NOT NEED ANY PARAMS
-                #FIND RESULT AND PUT IN SPEECH RESPONSE
-                #result = treat_intent(intent_id, parameters, seat_map)
-                #result_json["seat_map"] = result
 
         elif request_json.get("complete") is False:
             #if some params are required further
@@ -265,8 +253,16 @@ def api():
                                     undefined=SilentUndefined)
                 result_json["speechResponse"] = split_sentence(template.render(**context))
 
+            #get seat map with updated seats
+            print("----result json before treating", result_json)
             result = treat_intent(intent_id, result_json["extractedParameters"], seat_map)
-            result_json["seat_map"] = result
+            
+            if result is not None:
+                result_seat_map, response = result
+                result_json["seat_map"] = result_seat_map
+                template = Template(response, undefined = SilentUndefined)
+                result_json["speechResponse"] = split_sentence(template.render(**context))
+            
 
         app.logger.info(request_json.get("input"), extra=result_json)
         return build_response.build_json(result_json)

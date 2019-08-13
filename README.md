@@ -1,4 +1,4 @@
-![alt title](https://github.com/mayurnewase/looking-to-listen-at-cocktail-party/blob/master/assets/logo.png)
+![alt title](https://github.com/mayurnewase/Chatty/edit/master/assets/logo.png)
 
 ### An AI Chatbot built in Python
 
